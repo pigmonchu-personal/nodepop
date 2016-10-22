@@ -1,0 +1,36 @@
+{
+  "name": "nodepop",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "ejs": "~2.4.1",
+    "express": "~4.13.4",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.0"
+  },
+  "description": "Api de consulta de anuncios",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pigmonchu/nodepop.git"
+  },
+  "keywords": [
+    "KeepCoding",
+    "BootCamp",
+    "nodejs",
+    "practica"
+  ],
+  "author": "Mon Maldonado",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pigmonchu/nodepop/issues"
+  },
+  "homepage": "https://github.com/pigmonchu/nodepop#readme"
+}
