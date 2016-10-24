@@ -4,6 +4,10 @@ var fs = require('fs');
 var Client = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 var csv = require('fast-csv');
+var path = require('path');
+
+var appDir = path.dirname(require.main.filename);
+console.log(appDir);
 
 require('../models/Anuncio');
 var Anuncio = mongoose.model('Anuncio');
@@ -29,14 +33,15 @@ if (mongoose.connection.collections['usuarios']) {
 /*  -----------------
 		CARGA DE ANUNCIOS
     -----------------  */
-var stream = fs.createReadStream("./anuncios.csv");
+
+var stream = fs.createReadStream(appDir+"/../db/anuncios.csv");
 
 var fila = 0;
 var nombres = [];
 var arrRegistros = [];
 var csvStream = csv
-    .parse({quote: '"', delimiter:','})
-    .transform(function(data){
+    .parse({quote: '"', delimiter:',', ignoreEmpty: true})
+    .on('data', function(data){
 			var registro = {};
 
 			if (fila === 0) {
@@ -63,6 +68,11 @@ var csvStream = csv
 					registro.tags.push('MOBILE');
 				}
 				registro.precio = parseFloat(registro.precio);
+				arrRegistros.push(registro);
+			}
+    })
+    .on('end', function(){
+			arrRegistros.forEach(function(registro) {
 				var anuncio = new Anuncio(registro);
 				anuncio.save(function(err, anuncioCreado){
 					if (err) {
@@ -71,13 +81,15 @@ var csvStream = csv
 					}
 					console.log('Anuncio '+anuncioCreado.nombre+' creado');
 				});
-				arrRegistros.push(registro);
-			}
+			});
+
+	    console.log('Fin de carga');
+			mongoose.connection.close();
+
     })
 ;
  
 stream.pipe(csvStream);
-
 
 
 
