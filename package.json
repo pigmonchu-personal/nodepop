@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "start": "DEBUG=generated:* nodemon ./bin/www",
-    "installDB": "node ./scripts/install_db.js"
+    "installDB": "NODE_PATH=./scripts node ./scripts/install_db.js"
   },
   "dependencies": {
+    "bcrypt": "^0.8.7",
     "body-parser": "~1.15.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",

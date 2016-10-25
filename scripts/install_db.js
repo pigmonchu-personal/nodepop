@@ -5,91 +5,152 @@ var Client = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 var csv = require('fast-csv');
 var path = require('path');
+var bcrypt = require('bcrypt');
 
-var appDir = path.dirname(require.main.filename);
-console.log(appDir);
+const readline = require('readline');
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout
+});
+
+// var appDir = path.dirname(require.main.filename);
+console.log(__dirname);
 
 require('../models/Anuncio');
 var Anuncio = mongoose.model('Anuncio');
 
-/*  -----------------
-		BORRADO DE TABLAS
-    -----------------  */
-require('../lib/mongoConnection'); //Conecto a base de datos
+require('../models/User');
+var User = mongoose.model('User');
 
+var pideParam = function(question, data, obj) {
+	obj = obj ? obj : {};
 
-if (mongoose.connection.collections['anuncios']) {
-	mongoose.connection.collections['anuncios'].drop( function(err) {
-	    console.log('collection anuncios dropped');
+	return new Promise(function(resolve, reject) {
+		rl.question(question, function(answer) {
+			obj[data] = answer;
+			resolve(obj);
+		});
 	});
-}
+};
 
-if (mongoose.connection.collections['usuarios']) {
-	mongoose.connection.collections['usuarios'].drop( function(err) {
-	    console.log('collection usuarios dropped');
-	});
-}
-
-/*  -----------------
-		CARGA DE ANUNCIOS
-    -----------------  */
-
-var stream = fs.createReadStream(appDir+"/../db/anuncios.csv");
-
-var fila = 0;
-var nombres = [];
-var arrRegistros = [];
-var csvStream = csv
-    .parse({quote: '"', delimiter:',', ignoreEmpty: true})
-    .on('data', function(data){
-			var registro = {};
-
-			if (fila === 0) {
-				data.forEach(function(name) {
-					nombres.push(name);
+var borraCollection = function(tabla) {
+	return new Promise(function(resolve, reject) {
+		if (mongoose.connection.collections[tabla]) {
+				mongoose.connection.collections[tabla].drop( function(err) {
+				    console.log('collection '+tabla+' dropped');
+						resolve();
 				});
-				fila++;
-			} else {
-				for (var i=0; i<data.length; i++) {
-					registro[nombres[i]] = data[i];					
+			}		
+		});
+};
+
+var cargaUsuario = function(usuario) {
+	usuario = new User(usuario);
+	usuario.save(function(err, usuarioCreado){
+		if (err) {
+			console.log('Error al crear usuario: '+err);
+			return;
+		}
+		console.log('User '+usuarioCreado.nombre+' creado');
+	});
+}
+
+var cargaAnuncios = function() {
+	var stream = fs.createReadStream("db/anuncios.csv");
+	var fila = 0;
+	var nombres = [];
+	var arrRegistros = [];
+	var csvStream = csv
+	    .parse({quote: '"', delimiter:','})
+	    .on('data', function(data){
+				var registro = {};
+	
+				if (fila === 0) {
+					data.forEach(function(name) {
+						nombres.push(name);
+					});
+					fila++;
+				} else {
+					for (var i=0; i<data.length; i++) {
+						registro[nombres[i]] = data[i];					
+					}
+					registro.esVenta = registro.esVenta === '1';
+					registro.tags = [];
+					if (registro.esWORK === '1') {
+						registro.tags.push('WORK');
+					}
+					if (registro.esLIFESTYLE === '1') {
+						registro.tags.push('LIFESTYLE');
+					}
+					if (registro.esMOTOR === '1') {
+						registro.tags.push('MOTOR');
+					}
+					if (registro.esMOBILE === '1') {
+						registro.tags.push('MOBILE');
+					}
+					registro.precio = parseFloat(registro.precio);
+					arrRegistros.push(registro);
 				}
-				registro.esVenta = registro.esVenta === '1';
-				registro.tags = [];
-				if (registro.esWORK === '1') {
-					registro.tags.push('WORK');
-				}
-				if (registro.esLIFESTYLE === '1') {
-					registro.tags.push('LIFESTYLE');
-				}
-				if (registro.esMOTOR === '1') {
-					registro.tags.push('MOTOR');
-				}
-				if (registro.esMOBILE === '1') {
-					registro.tags.push('MOBILE');
-				}
-				registro.precio = parseFloat(registro.precio);
-				arrRegistros.push(registro);
-			}
-    })
-    .on('end', function(){
-			arrRegistros.forEach(function(registro) {
-				var anuncio = new Anuncio(registro);
-				anuncio.save(function(err, anuncioCreado){
+	    })
+	    .on('end', function(){
+				Anuncio.collection.insert(arrRegistros, function(err, docs) {
 					if (err) {
-						console.log('Error al crear anuncio '+ anuncioCreado.nombre +' => '+error);
+						console.log('Error insercion de anuncios: '+err);
 						return;
 					}
-					console.log('Anuncio '+anuncioCreado.nombre+' creado');
+					console.log('%d anuncios grabados', arrRegistros.length);
+					mongoose.connection.close();
 				});
-			});
+	    })
+	;
+	 
+	stream.pipe(csvStream);
+}
 
-	    console.log('Fin de carga');
-			mongoose.connection.close();
+var usuario = {};
 
-    })
+pideParam('Introduce tu nombre: ', 'nombre', usuario)
+	.then(function(usuario){
+		return pideParam('Introduce tu email: ', 'email', usuario);
+	})
+	.then(function(usuario){
+		return pideParam('Introduce tu contraseña: ', 'password', usuario);
+	})
+	.then(function(usuario){
+		rl.close();
+		process.stdin.destroy();
+
+		require('../lib/mongoConnection'); //Conecto a base de datos
+
+		var salt = bcrypt.genSaltSync(10);
+		usuario.password = bcrypt.hashSync(usuario.password, salt);
+
+		/*  -----------------
+				BORRADO DE TABLAS
+		    -----------------  */
+		borraCollection('users')
+			.then(function(){
+				borraCollection('anuncios');
+			})
+			.then(function(){
+				cargaUsuario(usuario);
+				cargaAnuncios();
+			})
+		;	
+
+	})
+	.catch(function(err) {
+		console.log('Error: '+ err);
+	})
 ;
- 
-stream.pipe(csvStream);
+
+
+
+
+
+
+
+
 
 
 
