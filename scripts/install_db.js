@@ -88,6 +88,10 @@ var cargaAnuncios = function() {
 					if (registro.esMOBILE === '1') {
 						registro.tags.push('MOBILE');
 					}
+					delete registro.esMOTOR;
+					delete registro.esLIFESTYLE;
+					delete registro.esWORK;
+					delete registro.esMOBILE;
 					registro.precio = parseFloat(registro.precio);
 					arrRegistros.push(registro);
 				}
