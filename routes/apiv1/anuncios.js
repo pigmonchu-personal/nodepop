@@ -7,27 +7,47 @@ var mongoose = require('mongoose');
 var Anuncio = mongoose.model('Anuncio');
 
 router.get('/', function(req, res, next){
-	var nombre = req.query.nombre;
 	var sort = req.query.sort || null;
 	var limit = +req.query.limit || null;
 	var skip = parseInt(req.query.skip) || 0;
 	var fields = req.query.fields || null;
-	var precio = req.query.precio ;
 
+	var tags = req.query.tag;
 	var filter = {};
-	if (nombre) {
-		filter.nombre = nombre;
+
+	if (req.query.nombre) {
+		filter.nombre = new RegExp(req.query.nombre, "i");
+	}
+	
+	if (req.query.venta) {
+		filter.esVenta = (req.query.venta.toUpperCase() === 'TRUE');
 	}
 
-//refactorizar
-	precio = filterPrecio(precio);
+	var precio = filterPrecio(req.query.precio);
 	if (precio) {
 		filter.precio = precio;
 	}
 
+	if (tags) {
+		tags = filterTags(tags);
+		if (Array.isArray(tags)) {
+			filter.$and = tags;
+		} else {
+			filter.tags = tags;
+		}
+	} 
+
+  console.log('Lista de anuncios por...');
+  console.log(filter);
+
 	Anuncio.lista(filter, sort, limit, skip, fields)
 		.then(function(lista) {
-			res.json({success:true, count: lista.length, Anuncios:lista});
+			var result = {success:true}
+			if (req.query.count.toUpperCase() === 'TRUE') {
+				result.count = lista.length;
+			} 
+			result.Anuncios = lista;
+			res.json(result);
 		}).catch(function(err){
 			next(err);
 		});
@@ -38,7 +58,6 @@ function filterPrecio(precio) {
             
 	if (precio && re.test(precio) && precio !== '-') {
 		var precios = precio.split('-');
-console.log(precios);
 		if (precios.length===1) {
 			precio = precios[0];
 		} else {
@@ -50,9 +69,20 @@ console.log(precios);
 				precio.$lte = precios[1];
 			}
 		}
-console.log(precio);
 		return precio;
 	}
 }
 
+function filterTags(tags) {
+		tags = tags.toUpperCase().split(' ');
+		if (tags.length === 1) {
+			return tags[0];
+		}
+		var $and = [];
+		for (var i=0; i < tags.length; i++ ) {
+			var otag = {tags: tags[i]};
+			$and.push(otag);
+		}
+		return $and;
+}
 module.exports = router;
