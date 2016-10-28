@@ -7,29 +7,25 @@ var mongoose = require('mongoose');
 var Anuncio = mongoose.model('Anuncio');
 
 router.get('/', function(req, res, next){
-	var sort = req.query.sort || null;
-	var limit = +req.query.limit || null;
-	var skip = parseInt(req.query.skip) || 0;
-	var fields = req.query.fields || null;
+	var params = getParams(req);
 
-	var tags = req.query.tag;
 	var filter = {};
 
-	if (req.query.nombre) {
-		filter.nombre = new RegExp(req.query.nombre, "i");
+	if (params.nombre) {
+		filter.nombre = new RegExp(params.nombre, "i");
 	}
 	
-	if (req.query.venta) {
-		filter.esVenta = (req.query.venta.toUpperCase() === 'TRUE');
+	if (params.esVenta) {
+		filter.esVenta = (params.esVenta === 'TRUE');
 	}
 
-	var precio = filterPrecio(req.query.precio);
+	var precio = fixFilterPrecio(params.precio);
 	if (precio) {
 		filter.precio = precio;
 	}
 
-	if (tags) {
-		tags = filterTags(tags);
+	if (params.tags) {
+		var tags = fixFilterTags(params.tags);
 		if (Array.isArray(tags)) {
 			filter.$and = tags;
 		} else {
@@ -40,10 +36,10 @@ router.get('/', function(req, res, next){
   console.log('Lista de anuncios por...');
   console.log(filter);
 
-	Anuncio.lista(filter, sort, limit, skip, fields)
+	Anuncio.lista(filter, params)
 		.then(function(lista) {
 			var result = {success:true}
-			if (req.query.count.toUpperCase() === 'TRUE') {
+			if (params.count === 'TRUE') {
 				result.count = lista.length;
 			} 
 			result.Anuncios = lista;
@@ -53,7 +49,21 @@ router.get('/', function(req, res, next){
 		});
 });
 
-function filterPrecio(precio) {
+function getParams(req) {
+	var params = {};
+	params.sort = req.query.sort || null;
+	params.limit = +req.query.limit || null;
+	params.skip = parseInt(req.query.skip) || 0;
+	params.fields = req.query.fields || null;
+	params.nombre = req.query.nombre;
+	params.esVenta = req.query.venta ? req.query.venta.toUpperCase() : null;
+	params.precio = req.query.precio;
+	params.tags = req.query.tag;
+	params.count = req.query.count ? req.query.count.toUpperCase() : null;
+	
+	return params;
+}
+function fixFilterPrecio(precio) {
 	var re = /^((\s?|\d+)-?(\s?|\d+))$$/;
             
 	if (precio && re.test(precio) && precio !== '-') {
@@ -73,7 +83,7 @@ function filterPrecio(precio) {
 	}
 }
 
-function filterTags(tags) {
+function fixFilterTags(tags) {
 		tags = tags.toUpperCase().split(' ');
 		if (tags.length === 1) {
 			return tags[0];
@@ -85,4 +95,5 @@ function filterTags(tags) {
 		}
 		return $and;
 }
+
 module.exports = router;

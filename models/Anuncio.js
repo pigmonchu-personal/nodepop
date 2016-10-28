@@ -15,13 +15,13 @@ var anuncioSchema = mongoose.Schema({
 
 //Métodos específicos del modelo
 //
-anuncioSchema.statics.lista = function(filter, sort, limit, skip, fields) {
+anuncioSchema.statics.lista = function(filter, params) {
 	return new Promise(function(resolve, reject) {
 		var query = Anuncio.find(filter);
-		query.sort(sort);
-		query.limit(limit);
-		query.skip(skip);
-		query.select(fields);
+		query.sort(params.sort);
+		query.limit(params.limit);
+		query.skip(params.skip);
+		query.select(params.fields);
 
 		query.exec(function(err, result){
 			if (err) {
@@ -33,8 +33,6 @@ anuncioSchema.statics.lista = function(filter, sort, limit, skip, fields) {
 
 	});
 }
-
-
 
 //'Exportación' del modelo
 //
