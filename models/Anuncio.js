@@ -19,16 +19,30 @@ anuncioSchema.statics.lista = function(filter, params) {
 	return new Promise(function(resolve, reject) {
 		var query = Anuncio.find(filter);
 		query.sort(params.sort);
+		query.select(params.fields);
 		query.limit(params.limit);
 		query.skip(params.skip);
-		query.select(params.fields);
 
-		query.exec(function(err, result){
+		
+		query.exec(function(err, listado){
 			if (err) {
 				reject(err);
 				return;
 			}
-			resolve(result);
+			if (params.count) {
+				var qCount=Anuncio.find(filter);
+				qCount.count(true);
+				qCount.exec(function(err, total){
+					if (err) {
+						reject(err);
+						return;
+					}
+					resolve({total: total, listado });
+				});
+				
+			} else {
+				resolve(listado);
+			}
 		});
 
 	});

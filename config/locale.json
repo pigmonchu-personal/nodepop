@@ -1,0 +1,32 @@
+{
+	"Failed to authenticate token": {
+		"es": "Fallo en autenticación de token"	
+	}, 
+	"No token provided": {
+		"es": "Falta el token"
+	},
+	"Wrong user or password": {
+		"es": "Usuario o contraseña incorrectos"		
+	},
+	"User mail malformed": {
+		"es": "Formato incorrecto del mail"
+	},
+	"User mail required": {
+		"es": "Mail del usuario obligatorio"
+	},
+	"User password required": {
+		"es": "Contraseña del usuario obligatoria"
+	},
+	"User validation failed": {
+		"es": "Error en validación de usuario"
+	}, 
+	"Error authenticate": {
+		"es": "Error de autenticación"
+	},
+	"Passwords do'nt match": {
+		"es": "Las contraseñas no coinciden"
+	},
+	"Not Found": {
+		"es": "No se encuentra el recurso"
+	}
+}

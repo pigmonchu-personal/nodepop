@@ -25,6 +25,7 @@ router.get('/', jwtAuth(), function(req, res, next){
 		filter.precio = precio;
 	}
 
+
 	if (params.tags) {
 		var tags = fixFilterTags(params.tags);
 		if (Array.isArray(tags)) {
@@ -32,18 +33,20 @@ router.get('/', jwtAuth(), function(req, res, next){
 		} else {
 			filter.tags = tags;
 		}
-	} 
-
+	}
+	
   console.log('Lista de anuncios por...');
-  console.log(filter);
 
 	Anuncio.lista(filter, params)
 		.then(function(lista) {
-			var result = {success:true}
-			if (params.count === 'TRUE') {
-				result.count = lista.length;
+			var result = {success:true};
+			if (lista.total) {
+				result.total = lista.total;
+				result.Anuncios = lista.listado;
+			} else {
+				result.Anuncios = lista;
 			} 
-			result.Anuncios = lista;
+
 			res.json(result);
 		}).catch(function(err){
 			next(err);
@@ -60,10 +63,11 @@ function getParams(req) {
 	params.esVenta = req.query.venta ? req.query.venta.toUpperCase() : null;
 	params.precio = req.query.precio;
 	params.tags = req.query.tag;
-	params.count = req.query.count ? req.query.count.toUpperCase() : null;
+	params.count = req.query.count ? (req.query.count.toUpperCase() === 'TRUE' ? true : null ): null;
 	
 	return params;
 }
+
 function fixFilterPrecio(precio) {
 	var re = /^((\s?|\d+)-?(\s?|\d+))$$/;
             
