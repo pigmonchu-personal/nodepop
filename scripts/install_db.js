@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var csv = require('fast-csv');
 var path = require('path');
 var bcrypt = require('bcrypt');
+var config = require('config');
 
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -13,15 +14,11 @@ const rl = readline.createInterface({
 	output: process.stdout
 });
 
-// var appDir = path.dirname(require.main.filename);
-console.log(__dirname);
-
 require('../models/Anuncio');
 var Anuncio = mongoose.model('Anuncio');
 
 require('../models/User');
 var User = mongoose.model('User');
-
 var pideParam = function(question, data, obj) {
 	obj = obj ? obj : {};
 
@@ -126,8 +123,10 @@ pideParam('Introduce tu nombre: ', 'nombre', usuario)
 
 		require('../lib/mongoConnection'); //Conecto a base de datos
 
-		var salt = bcrypt.genSaltSync(10);
+/*
+		var salt = bcrypt.genSaltSync(config.get('genSalt'));
 		usuario.password = bcrypt.hashSync(usuario.password, salt);
+*/
 
 		/*  -----------------
 				BORRADO DE TABLAS
@@ -138,8 +137,8 @@ pideParam('Introduce tu nombre: ', 'nombre', usuario)
 			})
 			.then(function(){
 				cargaUsuario(usuario);
-				cargaAnuncios();
 			})
+			.then(cargaAnuncios)
 		;	
 
 	})
