@@ -35,12 +35,14 @@ userSchema.pre('save',function(next, done){
 	}
 	bcrypt.genSalt(config.get('genSalt'), function(err, salt) {
 		if (err) {
+console.log(err);
 			next(err);
 			return;
 		}
 
 		bcrypt.hash(user.password, salt, function(err, hash) {
 			if (err) {
+console.log(err);
 				next(err);
 				return;
 			}

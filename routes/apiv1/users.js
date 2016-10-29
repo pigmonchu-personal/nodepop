@@ -29,8 +29,9 @@ router.post('/signup', function(req, res, next){
 	var email = req.body.email;
 	var pass = req.body.pass;
 	var rptpass = req.body.rptpass;
-	
-	var user = new User({email: email, password: pass});
+	var name = req.body.name;
+
+	var user = new User({email: email, password: pass, nombre: name});
 
 	if (pass !== rptpass) {
 		var err = new Error();
