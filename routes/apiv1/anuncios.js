@@ -53,6 +53,19 @@ router.get('/', jwtAuth(), function(req, res, next){
 		});
 });
 
+router.get('/tags', jwtAuth(), function(req, res, next){
+
+	Anuncio.tags()
+		.then(function(lista) {
+			var result = {success: true};
+			result.Tags = lista;
+			res.json(result);
+		})
+		.catch(function(err){
+			res.json(err);
+		})
+});
+
 function getParams(req) {
 	var params = {};
 	params.sort = req.query.sort || null;

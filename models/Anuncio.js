@@ -48,6 +48,20 @@ anuncioSchema.statics.lista = function(filter, params) {
 	});
 }
 
+anuncioSchema.statics.tags = function() {
+	return new Promise(function(resolve, reject) {
+		var query = Anuncio.find().distinct('tags', function(err, etiquetas){
+			if (err) {
+				reject(err);
+				return;
+			}
+			
+			resolve(etiquetas);
+			
+		});
+	});
+}
+
 //'Exportación' del modelo
 //
 var Anuncio = mongoose.model('Anuncio', anuncioSchema);
