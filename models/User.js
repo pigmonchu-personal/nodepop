@@ -5,6 +5,8 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 var config = require('config');
 var validator = require('validator');
+var CustomError = require('../lib/customError');
+var i18n = require('i18n-nodejs')(config.get('language'), config.get('langFile'));
 
 //Estructura del modelo
 //
@@ -14,17 +16,17 @@ var userSchema = mongoose.Schema({
 		type: String,
 		validate: {
 			validator: validator.isEmail,
-// 			message: _('mail malformed');
-			message: 'User mail malformed' 
+			message: i18n.__('User mail malformed') 
 		},
-// 		required: [true, _('User mail required')]
-		required: [true, 'User mail required']
+		required: [true, i18n.__('User mail required')]
 	},
 	password: {
 		type: String,
-		required: [true, 'User password required']
+		required: [true, i18n.__('User password required')]
 	}
 });
+
+userSchema.index({ email:1 }, { unique: true });
 
 userSchema.pre('save',function(next, done){
 	var user = this;
@@ -51,35 +53,28 @@ userSchema.pre('save',function(next, done){
 	});
 });
 
-userSchema.index({ email:1 }, { unique: true });
-//
 userSchema.statics.authenticate = function(email, pass) {
 	return new Promise(function(resolve, reject) {
 		var query = User.findOne({email: email});
 		query.exec(function(err, usuario){
-				if (err) {
-					console.log('Error: '+err);
-					reject(err);					
-				}
-				err = {};
-				
-				if (!usuario ) {
-					err.name ='wrong credentials';
-					err.message = 'Usuario o contraseña incorrectos';
-					reject(err);
-					return;					
-				}
-				if (bcrypt.compareSync(pass, usuario.password)) {
-					let token = jwt.sign({id: usuario.id}, config.get('appKey'), {
-						expiresIn: '2 hours'
-					});
-					resolve(token);					
-				}
-
-				err.name ='wrong credentials';
-				err.message = 'Usuario o contraseña incorrectos';
+			if (err) {
+				console.log(i18n.__('Error authenticate')+": "+err);
 				reject(err);					
+			}
+
+			if (!usuario ) {
+				reject("Wrong user or password");
 				return;					
+			}
+			if (bcrypt.compareSync(pass, usuario.password)) {
+				let token = jwt.sign({id: usuario.id}, config.get('appKey'), {
+					expiresIn: '2 hours'
+				});
+				resolve(token);					
+			}
+
+			reject("Wrong user or password");
+			return;					
 	
 		}); 
 

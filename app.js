@@ -6,6 +6,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var CustomError = require('./lib/customError');
+/*
+var config = require('config');
+var i18n = require('i18n-nodejs')(config.get('language'), config.get('langFile'));
+*/
 
 var app = express();
 
@@ -47,9 +52,13 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
+    err.status = err.status || 500;
+    res.status(err.status);
 		if (isAPI(req)) {
-			res.json({success: false, error: err});
+			var errorLimpio = new CustomError();
+			errorLimpio.status(err.status);
+			errorLimpio.process(err);
+			res.json(errorLimpio);
 		} else {
 	    res.render('error', {
 	      message: err.message,
@@ -63,10 +72,16 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+	if (isAPI(req)) {
+		var errorLimpio = new CustomError();
+		errorLimpio.process(err);
+		res.json(errorLimpio);
+	} else {
+	  res.render('error', {
+	    message: err.message,
+	    error: {}
+	  });
+	}
 });
 
 function isAPI(req) {

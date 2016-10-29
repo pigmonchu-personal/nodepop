@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var CustomError = require('../../lib/customError');
 
 router.post('/authenticate', function(req, res, next){
 	var email = req.body.email;
@@ -20,7 +21,7 @@ router.post('/authenticate', function(req, res, next){
 			result.token = token;
 			res.json(result);
 		}).catch(function(err){
-			next(err);
+			res.json(new CustomError(CustomError.prototype._AUTH, err));
 		});
 	
 });
@@ -33,41 +34,25 @@ router.post('/signup', function(req, res, next){
 	var user = new User({email: email, password: pass});
 
 	if (pass !== rptpass) {
-		var err = new Error();
-		err.name = 'pwd not match';
-// 		err.message = _("passwords do'nt match");
-		err.message = "passwords do'nt match";
+		res.json(new CustomError(CustomError.prototype._AUTH, "Passwords do'nt match"));
 		next(err);
 		return;
 	};
 
-/*
-	if (!validator.email(email)) {
-		var err = new Error();
-		err.name = 'mail format';
-		err.message = 'mail malformed';
-		next(err);
-		return;
-	}
-*/
-
 	user.save(function(err, createdUser){
 		if (err) {
-			console.log(err);
 			if (err.name === 'MongoError') {
-			var errLimpio = new Error();
-				errLimpio.name = 'db error';
-	// 			err.message = _('system error');
-				errLimpio.message = 'database error';
-				errLimpio.error = {code: err.code, errmsg: err.errmsg};
-				err = errLimpio;
-			}
-			
-			if (err.name === 'ValidatorError') {
-				
+console.log(err.toString());
+				res.json(new CustomError(CustomError.prototype._DDBB, err.message, {code: err.code}));
+				return;
 			}
 
-			next(err);
+			if (err.name === 'ValidationError') {
+				res.json(new CustomError(CustomError.prototype._VALI, err.message, err.errors));
+				return;
+			}
+			
+			res.json(null, err.message);
 			return;
 		}
 		var result = {success:true}
