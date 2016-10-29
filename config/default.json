@@ -1,0 +1,10 @@
+{
+	"dbConfig": {
+		"host": "localhost",
+		"port": 27017,
+		"dbName": "nodepop"
+	}, 
+	"appKey": "bsvs#kgaj@gngj_jdum@sbcu",
+	"genSalt": 10,
+	"language": "es"
+}

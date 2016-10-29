@@ -3,21 +3,24 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "DEBUG=generated:* nodemon ./bin/www",
+    "start": "DEBUG=generated:* NODE_PATH=./scripts nodemon ./bin/www",
     "installDB": "NODE_PATH=./scripts node ./scripts/install_db.js"
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
     "body-parser": "~1.15.1",
+    "config": "^1.21.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "ejs": "~2.4.1",
     "express": "~4.13.4",
     "fast-csv": "^2.3.0",
+    "jsonwebtoken": "^7.1.9",
     "mongodb": "^2.2.11",
     "mongoose": "^4.6.4",
     "morgan": "~1.7.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "validator": "^6.1.0"
   },
   "description": "Api de consulta de anuncios",
   "main": "app.js",

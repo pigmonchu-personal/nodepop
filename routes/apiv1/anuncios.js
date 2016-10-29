@@ -2,11 +2,12 @@
 
 var express = require("express");
 var router = express.Router();
+var jwtAuth = require('../../lib/jwtAuth');
 
 var mongoose = require('mongoose');
 var Anuncio = mongoose.model('Anuncio');
 
-router.get('/', function(req, res, next){
+router.get('/', jwtAuth(), function(req, res, next){
 	var params = getParams(req);
 
 	var filter = {};
