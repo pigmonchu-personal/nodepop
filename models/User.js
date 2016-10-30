@@ -6,7 +6,6 @@ var bcrypt = require('bcrypt');
 var config = require('config');
 var validator = require('validator');
 var CustomError = require('../lib/customError');
-var i18n = require('i18n-nodejs')(config.get('language'), config.get('langFile'));
 
 //Estructura del modelo
 //
@@ -16,13 +15,13 @@ var userSchema = mongoose.Schema({
 		type: String,
 		validate: {
 			validator: validator.isEmail,
-			message: i18n.__('User mail malformed') 
+			message: 'User mail malformed' 
 		},
-		required: [true, i18n.__('User mail required')]
+		required: [true, 'User mail required']
 	},
 	password: {
 		type: String,
-		required: [true, i18n.__('User password required')]
+		required: [true, 'User password required']
 	}
 });
 
@@ -37,14 +36,12 @@ userSchema.pre('save',function(next, done){
 	}
 	bcrypt.genSalt(config.get('genSalt'), function(err, salt) {
 		if (err) {
-console.log(err);
 			next(err);
 			return;
 		}
 
 		bcrypt.hash(user.password, salt, function(err, hash) {
 			if (err) {
-console.log(err);
 				next(err);
 				return;
 			}
@@ -60,7 +57,8 @@ userSchema.statics.authenticate = function(email, pass) {
 		var query = User.findOne({email: email});
 		query.exec(function(err, usuario){
 			if (err) {
-				console.log(i18n.__('Error authenticate')+": "+err);
+console('es aquí');
+				console.log(err);
 				reject(err);					
 			}
 

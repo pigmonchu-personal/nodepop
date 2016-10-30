@@ -1,32 +1,46 @@
 {
 	"Failed to authenticate token": {
-		"es": "Fallo en autenticación de token"	
+		"es": "Fallo en autenticación de token",
+		"fr": "Échec de l'authentification de jeton"
 	}, 
 	"No token provided": {
-		"es": "Falta el token"
+		"es": "Falta el token",
+		"fr": "Aucun jeton fourni"
 	},
 	"Wrong user or password": {
-		"es": "Usuario o contraseña incorrectos"		
+		"es": "Usuario o contraseña incorrectos",
+		"fr": "Utilisateur ou mot de passe incorrect"
 	},
 	"User mail malformed": {
-		"es": "Formato incorrecto del mail"
+		"es": "Formato incorrecto del mail",
+		"fr": "Mail utilisateur malformé"
 	},
 	"User mail required": {
-		"es": "Mail del usuario obligatorio"
+		"es": "Mail del usuario obligatorio",
+		"fr": "Mail utilisateur requis"
 	},
 	"User password required": {
-		"es": "Contraseña del usuario obligatoria"
+		"es": "Contraseña del usuario obligatoria",
+		"fr": "Mot de passe utilisateur requis"
 	},
 	"User validation failed": {
-		"es": "Error en validación de usuario"
+		"es": "Error en validación de usuario",
+		"fr": "Validation de l'utilisateur a échoué"
 	}, 
 	"Error authenticate": {
-		"es": "Error de autenticación"
+		"es": "Error de autenticación",
+		"fr": "Erreur d'authentification"
 	},
 	"Passwords do'nt match": {
-		"es": "Las contraseñas no coinciden"
+		"es": "Las contraseñas no coinciden",
+		"fr": "Les mots de passe do'nt correspondance"
 	},
 	"Not Found": {
-		"es": "No se encuentra el recurso"
+		"es": "No se encuentra el recurso",
+		"fr": "Pas trouvé"
+	},
+	"Database Error": {
+		"es": "Error en acceso a base de datos",
+		"fr": "Erreur de la base de données"
 	}
 }
