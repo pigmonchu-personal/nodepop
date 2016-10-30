@@ -6,6 +6,11 @@
 	}, 
 	"appKey": "bsvs#kgaj@gngj_jdum@sbcu",
 	"genSalt": 10,
-	"language": "es",
-	"langFile": "../../config/locale.json"
+	"langFile": "../../config/locale.json",
+	"defaultLanguage": "es",
+	"userLanguages": {
+		"en": "English",
+		"es": "Español",
+		"fr": "Français"
+	}
 }

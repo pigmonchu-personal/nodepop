@@ -7,6 +7,9 @@ var jwtAuth = require('../../lib/jwtAuth');
 var mongoose = require('mongoose');
 var Anuncio = mongoose.model('Anuncio');
 
+/* ------------------- * 
+	 GET apiv1/anuncios/
+   ------------------- */
 router.get('/', jwtAuth(), function(req, res, next){
 	var params = getParams(req);
 
@@ -53,6 +56,9 @@ router.get('/', jwtAuth(), function(req, res, next){
 		});
 });
 
+/* ----------------------- * 
+	 GET apiv1/anuncios/tags
+   ----------------------- */
 router.get('/tags', jwtAuth(), function(req, res, next){
 
 	Anuncio.tags()
