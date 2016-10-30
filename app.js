@@ -1,6 +1,6 @@
 "use strict";
 
-var express = require('express');
+var express = require('express'); 
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -19,7 +19,7 @@ require('./lib/mongoConnection'); //Conecto a base de datos
 //Models
 require('./models/Anuncio');
 require('./models/User');
-
+ 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
