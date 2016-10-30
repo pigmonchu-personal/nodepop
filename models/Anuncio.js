@@ -46,7 +46,7 @@ anuncioSchema.statics.lista = function(filter, params) {
 		});
 
 	});
-}
+};
 
 anuncioSchema.statics.tags = function() {
 	return new Promise(function(resolve, reject) {
@@ -60,7 +60,7 @@ anuncioSchema.statics.tags = function() {
 			
 		});
 	});
-}
+};
 
 //'Exportación' del modelo
 //

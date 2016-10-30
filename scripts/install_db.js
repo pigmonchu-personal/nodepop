@@ -50,7 +50,7 @@ var cargaUsuario = function(usuario) {
 		}
 		console.log('User '+usuarioCreado.nombre+' creado');
 	});
-}
+};
 
 var cargaAnuncios = function() {
 	var stream = fs.createReadStream("db/anuncios.csv");
@@ -66,9 +66,9 @@ var cargaAnuncios = function() {
 					data.forEach(function(name) {
 						nombres.push(name);
 					});
-					fila++;
+					fila+=1;
 				} else {
-					for (var i=0; i<data.length; i++) {
+					for (var i=0; i<data.length; i+=1) {
 						registro[nombres[i]] = data[i];					
 					}
 					registro.esVenta = registro.esVenta === '1';
@@ -106,7 +106,7 @@ var cargaAnuncios = function() {
 	;
 	 
 	stream.pipe(csvStream);
-}
+};
 
 var usuario = {};
 

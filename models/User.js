@@ -79,7 +79,7 @@ console('es aquí');
 		}); 
 
 	});
-}
+};
 
 //'Exportación' del modelo
 //

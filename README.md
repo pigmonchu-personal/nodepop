@@ -221,4 +221,4 @@ npm run installDB
 
 [^1]: Tomado de [W3C: Encabezado Accept-Language utilizado para ubicar la configuración](https://www.w3.org/International/questions/qa-accept-lang-locales) *"El encabezado Accept-Language es información acerca de las preferencias de idioma del usuario que se envían mediante HTTP cuando se solicita un documento. Los navegadores predominantes permiten que estas preferencias de idioma sean modificadas por el usuario. El valor en sí mismo está definido por [BCP 47](http://www.rfc-editor.org/rfc/bcp/bcp47.txt#), normalmente como un código de idioma de dos o tres letras (por ejemplo: fr para francés), seguido por subcódigos opcionales que representan elementos tales como el país (por ejemplo: fr-CA representa francés tal como se habla en Canadá)".*
 
-[^2]: El campo foto devuelve sólo el nombre del fichero con su extensión. La ruta en la que ubicarlo sera /imagenes/anuncios/[foto]
+[^2]: El campo foto devuelve sólo el nombre del fichero con su extensión. La ruta en la que ubicarlo sera `./imagenes/anuncios/[foto]`.
