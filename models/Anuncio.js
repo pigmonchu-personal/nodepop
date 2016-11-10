@@ -13,6 +13,12 @@ var anuncioSchema = mongoose.Schema({
 	tags: [String]
 });
 
+anuncioSchema.index({ nombre:1 });
+anuncioSchema.index({ esVenta:1 });
+anuncioSchema.index({ precio:1 });
+anuncioSchema.index({ tags:1 });
+
+
 //Métodos específicos del modelo
 //
 anuncioSchema.statics.lista = function(filter, params) {
