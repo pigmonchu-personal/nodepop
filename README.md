@@ -1,4 +1,20 @@
-#Práctica JS/Node.js/MongoDB (Master IV 2016)Consulta y filtrado de anuncios de compra/venta. Se necesita login para consultar.**versión**: 0.0.0#Rutas
+#Práctica JS/Node.js/MongoDB (Master IV 2016)Consulta y filtrado de anuncios de compra/venta. Se necesita login para consultar.**versión**: 0.0.0
+#Despliegue de la aplicación
+##Instalación de depencias
+~~~
+npm install
+~~~
+##Carga de Datos
+~~~
+npm run installDB
+~~~
+
+##Lanzar app
+~~~
+npm start
+~~~
+
+#Rutas
 Actualmente sólo está disponible la funcionalidad de consulta, siendo necesario **autenticarse** para acceder a los datos.
 
 ## GET /apiv1/anuncios
@@ -75,7 +91,7 @@ Exactamente igual que la lista de anuncios
 #Autenticación
 La autenticación se realiza por medio de un JSON web token. Para obtenerlo es necesario acceder a 
 
-##POST /apiv1/authenticate
+##POST /apiv1/usuarios/authenticate
 Devuelve un token con validez para dos horas durante las que se podrá consultar la base de datos de anuncios.
 
  *Parámetro* | *En* | *Descripción* | *Obligatorio* | *Schema* 
@@ -103,7 +119,7 @@ Devuelve un token con validez para dos horas durante las que se podrá consultar
 }
 ~~~
 
-##POST /apiv1/signup
+##POST /apiv1/usuarios/signup
 Permite dar de alta un usuario para poder consultar los anuncios
 
  *Parámetro* | *En* | *Descripción* | *Obligatorio* | *Schema* 
