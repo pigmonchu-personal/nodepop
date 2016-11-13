@@ -42,14 +42,16 @@ var borraCollection = function(tabla) {
 };
 
 var cargaUsuario = function(usuario) {
-	usuario = new User(usuario);
-	usuario.save(function(err, usuarioCreado){
-		if (err) {
-			console.log('Error al crear usuario: '+err);
-			return;
-		}
-		console.log('User '+usuarioCreado.nombre+' creado');
-	});
+	return new Promise(function(resolve, reject){
+		usuario = new User(usuario);
+		usuario.save(function(err, usuarioCreado){
+			if (err) {
+				reject('Error al crear usuario: '+err);
+			}
+			console.log('User '+usuarioCreado.nombre+' creado');
+			resolve(usuarioCreado);
+		});
+	})
 };
 
 var cargaAnuncios = function() {
