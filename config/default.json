@@ -2,7 +2,9 @@
 	"dbConfig": {
 		"host": "localhost",
 		"port": 27017,
-		"dbName": "nodepop"
+		"dbName": "nodepop",
+		"user": "macnode",
+		"pwd": "d258e9c696fef4bfc713148bc3a64268"
 	}, 
 	"appKey": "bsvs#kgaj@gngj_jdum@sbcu",
 	"genSalt": 10,
