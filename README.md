@@ -1,4 +1,25 @@
-#Práctica JS/Node.js/MongoDB (Master IV 2016)Consulta y filtrado de anuncios de compra/venta. Se necesita login para consultar.**versión**: 0.0.0
+#Práctica JS/Node.js/MongoDB (Master IV 2016)
+Consulta y filtrado de anuncios de compra/venta. Se necesita login para consultar.**versión**: 0.0.1
+
+##Práctica DevOps (Master IV 2016)
+La aplicación se encuentra para probar en 
+
+~~~
+https://nodepop.rmaldonado.es
+~~~
+
+Para probar contenido estático
+
+~~~
+https://nodepop.rmaldonado.es/imagenes
+~~~
+
+Para probar la página personal
+
+~~~
+https://www.rmaldonado.es
+~~~
+
 #Despliegue de la aplicación
 ##Instalación de depencias
 ~~~

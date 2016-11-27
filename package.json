@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "DEBUG=generated:* NODE_PATH=./scripts nodemon ./bin/www",
+    "start": "DEBUG=generated:* NODE_PATH=./scripts node ./bin/www",
     "installDB": "NODE_PATH=./scripts node ./scripts/install_db.js"
   },
   "dependencies": {
