@@ -1,9 +1,13 @@
-# Práctica JS/Node.js/MongoDB (Master IV 2016)
-Consulta y filtrado de anuncios de compra/venta. Se necesita login para consultar.**versión**: 0.0.1
+# Práctica JS/Node.js/MongoDB (Master II 2017)
+
+Consulta y filtrado de anuncios de compra/venta. Se necesita login para consultar.
+
+**versión**: 0.0.1
 
 
 # Despliegue de la aplicación
-## Instalación de depencias
+
+## Instalación de depencias
 ~~~
 npm install
 ~~~
@@ -22,7 +26,8 @@ La aplicación necesita de una base de datos MongoDB. La configuración de la ba
 
 Deberás instalar MongoDB y configurar el acceso en el fichero indicado.
 
-## Carga de Datos
+
+## Carga de Datos
 ~~~
 npm run installDB
 ~~~
