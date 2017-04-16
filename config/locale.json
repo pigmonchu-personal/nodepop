@@ -27,6 +27,10 @@
 		"es": "Error en validación de usuario",
 		"fr": "Validation de l'utilisateur a échoué"
 	}, 
+	"Anuncio validation failed": {
+		"es": "Error en validación de anuncio",
+		"fr": "Erreur de validation de l'annonce"
+	}, 
 	"Error authenticate": {
 		"es": "Error de autenticación",
 		"fr": "Erreur d'authentification"
@@ -42,5 +46,17 @@
 	"Database Error": {
 		"es": "Error en acceso a base de datos",
 		"fr": "Erreur de la base de données"
+	},
+	"Product name required": {
+		"es": "Nombre de producto obligatorio",
+		"fr": "Nom du produit utilisateur requis"
+	}, 
+	"isSale Required": {
+		"es": "esVenta es obligatorio",
+		"fr": "estVendre utilisateur requis"
+	}, 
+	"Price required": {
+		"es": "Precio requerido",
+		"fr": "Prix utilisateur requis"
 	}
 }

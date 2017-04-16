@@ -35,7 +35,7 @@ npm start
 # Rutas
 Actualmente sólo está disponible la funcionalidad de consulta, siendo necesario **autenticarse** para acceder a los datos.
 
-## GET /apiv1/ad
+## GET /apiv1/ads
 Devuelve todos los anuncios del sistema con todos sus datos. En función de los parámetros se pueden filtrar, elegir los campos a mostrar, paginar y obtener el total de los anuncios de la consulta
 
 ### Parámetros[^1]
@@ -44,7 +44,7 @@ Devuelve todos los anuncios del sistema con todos sus datos. En función de los 
  :------ | :---------- | :----------- | :----------- | :------ 
  **nombre** | query | Nombre del producto. El literal introducido formará parte del nombre del anuncio (en cualquier parte de él)| No | string 
  **precio** | query | Precio del producto. En forma de rango. `precio=10 ➤ Precio exacto` `precio=-10 ➤ Precio ≤ 10` `precio=10- ➤ Precio ≥ 10` `precio=10-50 ➤ 10 ≤ Precio ≤ 50` | No | number 
- **tags** | query | Tags del producto, separadas por espacio `tags=lifestyle motor ➤ tags contiene LIFESTYLE and MOTOR`.| No | number 
+ **tags** | query | Tags del producto, separadas por espacio `tags=lifestyle motor ➤ tags contiene LIFESTYLE and MOTOR`.| No | String 
  **esVenta** | query | Indica si el producto se vende (true) o se compra (false) `esVenta=true ➤ Anuncios de productos en venta`.| No | boolean 
  **count** | query | `count=true` devuelve el total de registros que cumplen las condiciones de búsqueda.| No | boolean 
  **limit** | query | Número máximo de registros devueltos por la consulta.| No | number 
@@ -83,7 +83,65 @@ Devuelve todos los anuncios del sistema con todos sus datos. En función de los 
 
 ~~~
 
-## GET /apiv1/anuncios/tags
+## POST /apiv1/ads
+Permite crear un anuncio
+
+### Parámetros[^1]
+
+ *Parámetro* | *En* | *Descripción* | *Obligatorio* | *Schema* 
+ :------ | :---------- | :----------- | :----------- | :------ 
+ **nombre** | body | Nombre del producto. | Si | String 
+ **descripcion** | body | Descripción del producto. | No | String 
+ **precio** | body | Precio del producto. | Si | number 
+ **tags** | body | Array de tags del producto.| No | String 
+ **esVenta** | body | Indica si el producto se vende (true) o se compra (false).| Si | boolean 
+ **foto** | body | Nombre del fichero de la imagen que lo acompaña (falta por crear servicio de subida de imágenes).| No | String 
+  **Accept-Language** | header | Establece el idioma de los mensajes de error. `Accept-Language: fr; q=1.0, en; q=0.5 ➤  Devuelve en francés`| No | [BCP 47](http://www.rfc-editor.org/rfc/bcp/bcp47.txt#) 
+ 
+#### Respuesta correcta [^2]
+~~~
+{
+  "success": true,
+  "anuncio": {
+    "__v": 0,
+    "nombre": "Caja de rotuladores",
+    "descripcion": "Rotuladores de colores con base de agua y punta fina y gruesa.",
+    "esVenta": true,
+    "precio": 1.5,
+    "foto": "caballo.jpg",
+    "_id": "",
+    "tags": [
+      "LIFESTYLE",
+      "WORK",
+      "SCHOOL"
+    ]
+  }
+}
+~~~
+#### Respuesta incorrecta
+En este caso lleva, además de nombre y mensaje de error, información adicional. En el ejemplo, error de validación.
+
+~~~
+{
+  "success": false,
+  "error": {
+    "name": "ValidationError",
+    "message": "Error en validación de anuncio",
+    "aditionalInfo": {
+      "esVenta": {
+        "message": "esVenta es obligatorio",
+        "name": "ValidatorError",
+        "kind": "required",
+        "path": "esVenta"
+      }
+    }
+  }
+}
+~~~
+
+
+
+## GET /apiv1/ads/tags
 Devuelve los distintos tags que figuran en la base de datos.
 
 ### Parámetros

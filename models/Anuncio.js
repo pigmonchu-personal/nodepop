@@ -1,14 +1,24 @@
 "use strict";
 
 var mongoose = require('mongoose');
+var validator = require('validator');
 
 //Estructura del modelo
 //
 var anuncioSchema = mongoose.Schema({
-	nombre: String,
+	nombre: {
+		type: String,
+		required: [true, 'Product name required']
+	},
 	descripcion: String,
-	esVenta: Boolean,
-	precio: Number, 
+	esVenta: {
+		type: Boolean,
+		required: [true, 'isSale Required']
+	},
+	precio:{
+		type: Number,
+		required: [true, 'Price required' ]
+	}, 
 	foto: String,
 	tags: [String]
 });
@@ -70,9 +80,6 @@ anuncioSchema.statics.tags = function() {
 	});
 };
 
-//'Exportación' del modelo
-//
-
 anuncioSchema.statics.fixFilterPrecio = function (precio) {
 	var re = /^((\s?|\d+)-?(\s?|\d+))$$/;
             
@@ -105,5 +112,8 @@ anuncioSchema.statics.fixFilterTags = function (tags) {
 		}
 		return $and;
 }
+
+//'Exportación' del modelo
+//
 
 var Anuncio = mongoose.model('Anuncio', anuncioSchema);

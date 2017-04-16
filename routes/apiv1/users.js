@@ -10,7 +10,7 @@ var CustomError = require('../../lib/customError');
 var LanguagesHandler = require('../../lib/userLanguages');
 var router = express.Router();
 
-/* POST apiv1/usuarios/
+/* POST apiv1/
              ============= */
 router.post('/authenticate', function(req, res, next){
 /*           ============= */
@@ -28,12 +28,12 @@ router.post('/authenticate', function(req, res, next){
 			result.token = token;
 			res.json(result);
 		}).catch(function(err){
-			res.json(new CustomError(CustomError.prototype._AUTH, langsHandler.traduction(err)));
+			res.status(400).json(new CustomError(CustomError.prototype._AUTH, langsHandler.traduction(err)));
 		});
 	
 });
 
-/* POST apiv1/usuarios/
+/* POST apiv1/
              ======= */
 router.post('/signup', function(req, res, next){
 /*           ======= */
@@ -54,16 +54,16 @@ router.post('/signup', function(req, res, next){
 	user.save(function(err, createdUser){
 		if (err) {
 			if (err.name === 'MongoError') {
-				res.json(new CustomError(CustomError.prototype._DDBB, langsHandler.traduction("Database Error"), err));
+				res.status(400).json(new CustomError(CustomError.prototype._DDBB, langsHandler.traduction("Database Error"), err));
 				return;
 			}
 
 			if (err.name === 'ValidationError') {
-				res.json(new CustomError(CustomError.prototype._VALI, langsHandler.traduction(err.message), User.procesaMensajesValidacion(err.errors)));
+				res.status(400).json(new CustomError(CustomError.prototype._VALI, langsHandler.traduction(err.message), langsHandler.procesaMensajesValidacion(err.errors)));
 				return;
 			}
 			
-			res.json(null, err.message);
+			res.status(400).json(null, err.message);
 			return;
 		}
 	
@@ -73,19 +73,8 @@ router.post('/signup', function(req, res, next){
 			result.usuario = cleanUser;
 			res.json(result);
 		})
-
-		// function procesaMensajesValidacion(errors){
-		// 	for (var err in errors) {
-		// 		errors[err]['message'] = langsHandler.traduction(errors[err]['message']);
-		// 		delete errors[err]['properties'];
-		// 	}
-		// 	return errors;
-		// }
-
-
 	})
 	
 });
-
 
 module.exports = router;

@@ -80,14 +80,6 @@ userSchema.statics.authenticate = function(email, pass) {
 	});
 };
 
-userSchema.statics.procesaMensajesValidacion = function (errors){
-	for (var err in errors) {
-		errors[err]['message'] = langsHandler.traduction(errors[err]['message']);
-		delete errors[err]['properties'];
-	}
-	return errors;
-};
-
 //'Exportación' del modelo
 //
 var User = mongoose.model('User', userSchema);
