@@ -17,11 +17,8 @@ router.post('/authenticate', function(req, res, next){
 
 	var langsHandler = new LanguagesHandler(req);
 	
-console.log(langsHandler);
-	
 	var email = req.body.email;
 	var pass = req.body.pass;
-	
 	//busco el usuario en la base de datos
 	//y compruebo credenciales
 
@@ -47,7 +44,6 @@ router.post('/signup', function(req, res, next){
 	var pass = req.body.pass;
 	var rptpass = req.body.rptpass;
 	var name = req.body.name;
-
 	var user = new User({email: email, password: pass, nombre: name});
 
 	if (pass !== rptpass) {
@@ -63,24 +59,28 @@ router.post('/signup', function(req, res, next){
 			}
 
 			if (err.name === 'ValidationError') {
-				res.json(new CustomError(CustomError.prototype._VALI, langsHandler.traduction(err.message), procesaMensajesValidacion(err.errors)));
+				res.json(new CustomError(CustomError.prototype._VALI, langsHandler.traduction(err.message), User.procesaMensajesValidacion(err.errors)));
 				return;
 			}
 			
 			res.json(null, err.message);
 			return;
 		}
-		var result = {success:true}
-		result.usuario = createdUser;
-		res.json(result);
+	
+		User.findOne(createdUser).select('-password').exec(function (err, cleanUser){
 
-		function procesaMensajesValidacion(errors){
-			for (var err in errors) {
-				errors[err]['message'] = langsHandler.traduction(errors[err]['message']);
-				delete errors[err]['properties'];
-			}
-			return errors;
-		}
+			var result = {success:true}
+			result.usuario = cleanUser;
+			res.json(result);
+		})
+
+		// function procesaMensajesValidacion(errors){
+		// 	for (var err in errors) {
+		// 		errors[err]['message'] = langsHandler.traduction(errors[err]['message']);
+		// 		delete errors[err]['properties'];
+		// 	}
+		// 	return errors;
+		// }
 
 
 	})

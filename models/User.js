@@ -57,7 +57,6 @@ userSchema.statics.authenticate = function(email, pass) {
 		var query = User.findOne({email: email});
 		query.exec(function(err, usuario){
 			if (err) {
-console('es aquí');
 				console.log(err);
 				reject(err);					
 			}
@@ -79,6 +78,14 @@ console('es aquí');
 		}); 
 
 	});
+};
+
+userSchema.statics.procesaMensajesValidacion = function (errors){
+	for (var err in errors) {
+		errors[err]['message'] = langsHandler.traduction(errors[err]['message']);
+		delete errors[err]['properties'];
+	}
+	return errors;
 };
 
 //'Exportación' del modelo

@@ -6,12 +6,14 @@ var jwtAuth = require('../../lib/jwtAuth');
 
 var mongoose = require('mongoose');
 var Anuncio = mongoose.model('Anuncio');
+var Utils = require('../../lib/utils');
+var utils = new Utils();
 
 /* ------------------- * 
 	 GET apiv1/anuncios/
    ------------------- */
 router.get('/', jwtAuth(), function(req, res, next){
-	var params = getParams(req);
+	var params = utils.getParams(req);
 
 	var filter = {};
 
@@ -23,14 +25,14 @@ router.get('/', jwtAuth(), function(req, res, next){
 		filter.esVenta = (params.esVenta === 'TRUE');
 	}
 
-	var precio = fixFilterPrecio(params.precio);
+	var precio = Anuncio.fixFilterPrecio(params.precio);
 	if (precio) {
 		filter.precio = precio;
 	}
 
 
 	if (params.tags) {
-		var tags = fixFilterTags(params.tags);
+		var tags = Anuncio.fixFilterTags(params.tags);
 		if (Array.isArray(tags)) {
 			filter.$and = tags;
 		} else {
@@ -71,53 +73,5 @@ router.get('/tags', jwtAuth(), function(req, res, next){
 			res.json(err);
 		})
 });
-
-function getParams(req) {
-	var params = {};
-	params.sort = req.query.sort || null;
-	params.limit = +req.query.limit || null;
-	params.skip = parseInt(req.query.skip) || 0;
-	params.fields = req.query.fields || null;
-	params.nombre = req.query.nombre;
-	params.esVenta = req.query.venta ? req.query.venta.toUpperCase() : null;
-	params.precio = req.query.precio;
-	params.tags = req.query.tag;
-	params.count = req.query.count ? (req.query.count.toUpperCase() === 'TRUE' ? true : null ): null;
-	
-	return params;
-}
-
-function fixFilterPrecio(precio) {
-	var re = /^((\s?|\d+)-?(\s?|\d+))$$/;
-            
-	if (precio && re.test(precio) && precio !== '-') {
-		var precios = precio.split('-');
-		if (precios.length===1) {
-			precio = precios[0];
-		} else {
-			precio = {};
-			if (precios[0]!=='') {
-				precio.$gte = precios[0];
-			}
-			if (precios[1]!=='') {
-				precio.$lte = precios[1];
-			}
-		}
-		return precio;
-	}
-}
-
-function fixFilterTags(tags) {
-		tags = tags.toUpperCase().split(' ');
-		if (tags.length === 1) {
-			return tags[0];
-		}
-		var $and = [];
-		for (var i=0; i < tags.length; i++ ) {
-			var otag = {tags: tags[i]};
-			$and.push(otag);
-		}
-		return $and;
-}
 
 module.exports = router;
